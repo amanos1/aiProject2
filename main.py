@@ -9,12 +9,135 @@
 # 3, Gives the reading of the current terrain, with 90% accuracy
 # After it has done this 100 times, it will store in a text file the data it has which will be stored in 3 arrays
 
+import random
+from math import ceil
+
+NORMAL = 0
+HIGHWAY = 1
+HARD_TO_TRAVERSE = 2
+BLOCKED = 3
+
+graph = []
+rows = 50
+columns = 100
+
+init_cell = ()
+locations = []
+directions = []
+observations = []
+
+
+class Cell:
+    def __init__(self, x, y, state):
+        self.x = x
+        self.y = y
+        self.state = state
+
+    def get_state(self):
+        return self.state
+
+
+class Agent:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def move_up(self):
+        if self.y > 0:
+            self.y -= 1
+
+    def move_down(self):
+        if self.y < rows - 1:
+            self.y += 1
+
+    def move_left(self):
+        if self.x > 0:
+            self.x -= 1
+
+    def move_right(self):
+        if self.x < columns - 1:
+            self.x += 1
+
+    def sniff(self):
+        random_number = random.randrange(0, 100)
+        smell = index(self.x, self.y).get_state()
+        if random_number < 90:
+            return smell
+        options = [NORMAL, HIGHWAY, HARD_TO_TRAVERSE]
+        options.remove(smell)
+        return options[random_number % 2]
+
+
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
+def generate_random_state():
+    random_number = random.randrange(0, 100)
+    if random_number < 50:
+        return NORMAL
+    elif random_number < 70:
+        return HIGHWAY
+    elif random_number < 90:
+        return HARD_TO_TRAVERSE
+    else:
+        return BLOCKED
+
+
+def populate_graph():
+    total_cells = columns * rows
+    normal = ceil(total_cells * 0.5)
+    highway = total_cells * 0.2
+    hard_to_traverse = total_cells * 0.2
+    blocked = total_cells - normal - highway - hard_to_traverse
+    for i in range(columns):
+        for j in range(rows):
+            state = 0
+            while True:
+                state = generate_random_state()
+                random_number = random.randrange(0, 100)
+                if random_number < 50:
+                    state = NORMAL
+                    if normal > 0:
+                        normal -= 1
+                        break
+                elif random_number < 70:
+                    state = HIGHWAY
+                    if highway > 0:
+                        highway -= 1
+                        break
+                elif random_number < 90:
+                    state = HARD_TO_TRAVERSE
+                    if hard_to_traverse > 0:
+                        hard_to_traverse -= 1
+                        break
+                else:
+                    state = BLOCKED
+                    if blocked > 0:
+                        blocked -= 1
+                        break
+            new_cell = Cell(i, j, state)
+            graph.append(new_cell)
+
+
+def traverse_graph():
+    for i in range(50):
+        yees = False
+
+
+def write_to_file():
+    return True
+
+
+def index(x, y):
+    return graph[(columns+1) * (y-1) + (x-1)]
+
+
 if __name__ == '__main__':
     print_hi('PyCharm')
+    populate_graph()
+    traverse_graph()
+    write_to_file()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
