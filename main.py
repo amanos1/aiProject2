@@ -12,10 +12,15 @@
 import random
 from math import ceil
 
-NORMAL = 0
-HIGHWAY = 1
-HARD_TO_TRAVERSE = 2
-BLOCKED = 3
+NORMAL = 'N'
+HIGHWAY = 'H'
+HARD_TO_TRAVERSE = 'T'
+BLOCKED = 'B'
+
+UP = 'U'
+DOWN = 'D'
+LEFT = 'L'
+RIGHT = 'R'
 
 graph = []
 rows = 50
@@ -67,6 +72,9 @@ class Agent:
         options.remove(smell)
         return options[random_number % 2]
 
+    def get_local(self):
+        return self.x, self.y
+
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -117,13 +125,27 @@ def populate_graph():
                     if blocked > 0:
                         blocked -= 1
                         break
+            print(state, " ", end="")
             new_cell = Cell(i, j, state)
             graph.append(new_cell)
+        print()
 
 
 def traverse_graph():
     for i in range(50):
-        yees = False
+        random_number = random.randrange(0, 4)
+        if random_number == 0:
+            myAgent.move_up()
+            directions.append(UP)
+        elif random_number == 1:
+            myAgent.move_down()
+            directions.append(DOWN)
+        elif random_number == 2:
+            myAgent.move_left()
+            directions.append(LEFT)
+        else:
+            myAgent.move_right()
+            directions.append(RIGHT)
 
 
 def write_to_file():
@@ -136,8 +158,13 @@ def index(x, y):
 
 if __name__ == '__main__':
     print_hi('PyCharm')
+    global myAgent
+    init_x = random.randrange(0, columns)
+    init_y = random.randrange(0, rows)
+    init_cell = (init_x, init_y)
+    myAgent = Agent(init_x, init_y)
     populate_graph()
-    traverse_graph()
-    write_to_file()
+    # traverse_graph()
+    # write_to_file()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
