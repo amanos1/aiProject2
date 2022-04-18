@@ -41,6 +41,12 @@ class Cell:
     def get_state(self):
         return self.state
 
+    def is_blocked(self):
+        return self.state == BLOCKED
+
+    def get_local(self):
+        return self.x, self.y
+
 
 class Agent:
     def __init__(self, x, y):
@@ -48,19 +54,19 @@ class Agent:
         self.y = y
 
     def move_up(self):
-        if self.y > 0:
+        if self.y > 0 and not index(self.x, self.y - 1).is_blocked():
             self.y -= 1
 
     def move_down(self):
-        if self.y < rows - 1:
+        if self.y < rows - 1 and not index(self.x, self.y + 1).is_blocked():
             self.y += 1
 
     def move_left(self):
-        if self.x > 0:
+        if self.x > 0 and not index(self.x - 1, self.y).is_blocked():
             self.x -= 1
 
     def move_right(self):
-        if self.x < columns - 1:
+        if self.x < columns - 1 and not index(self.x + 1, self.y).is_blocked():
             self.x += 1
 
     def sniff(self):
@@ -76,11 +82,6 @@ class Agent:
         return self.x, self.y
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
 def generate_random_state():
     random_number = random.randrange(0, 100)
     if random_number < 50:
@@ -94,14 +95,16 @@ def generate_random_state():
 
 
 def populate_graph():
+    graph.clear()
+    print("\n\n")
     total_cells = columns * rows
     normal = ceil(total_cells * 0.5)
-    highway = total_cells * 0.2
-    hard_to_traverse = total_cells * 0.2
+    highway = ceil(total_cells * 0.2)
+    hard_to_traverse = ceil(total_cells * 0.2)
     blocked = total_cells - normal - highway - hard_to_traverse
-    for i in range(columns):
-        for j in range(rows):
-            state = 0
+    for ii in range(rows):
+        for jj in range(columns):
+            state = 'N'
             while True:
                 state = generate_random_state()
                 random_number = random.randrange(0, 100)
@@ -126,13 +129,16 @@ def populate_graph():
                         blocked -= 1
                         break
             print(state, " ", end="")
-            new_cell = Cell(i, j, state)
+            new_cell = Cell(jj, ii, state)
             graph.append(new_cell)
         print()
 
 
 def traverse_graph():
-    for i in range(50):
+    directions.clear()
+    locations.clear()
+    observations.clear()
+    for i in range(100):
         random_number = random.randrange(0, 4)
         if random_number == 0:
             myAgent.move_up()
@@ -146,25 +152,38 @@ def traverse_graph():
         else:
             myAgent.move_right()
             directions.append(RIGHT)
+        locations.append(myAgent.get_local())
+        observations.append(myAgent.sniff())
 
 
-def write_to_file():
-    return True
+def write_to_file(map, interation):
+    f = open(f"ground_truth/map{map}test{interation}.txt", "w")
+
+    f.write(f"{init_cell[0]} {init_cell[1]}\n")
+    for i in locations:
+        f.write(f"{i[0]} {i[1]}\n")
+
+    for i in directions:
+        f.write(f"{i}\n")
+
+    for i in observations:
+        f.write(f"{i}\n")
+
+    f.close()
 
 
 def index(x, y):
-    return graph[(columns+1) * (y-1) + (x-1)]
+    return graph[(rows * y) + x]
 
 
 if __name__ == '__main__':
-    print_hi('PyCharm')
     global myAgent
-    init_x = random.randrange(0, columns)
-    init_y = random.randrange(0, rows)
-    init_cell = (init_x, init_y)
-    myAgent = Agent(init_x, init_y)
-    populate_graph()
-    # traverse_graph()
-    # write_to_file()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    for i in range(10):
+        populate_graph()
+        for j in range(10):
+            init_x = random.randrange(0, columns)
+            init_y = random.randrange(0, rows)
+            init_cell = (init_x, init_y)
+            myAgent = Agent(init_x, init_y)
+            traverse_graph()
+            write_to_file(i, j)
