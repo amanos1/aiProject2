@@ -54,19 +54,23 @@ class Agent:
         self.y = y
 
     def move_up(self):
-        if self.y > 0 and not index(self.x, self.y - 1).is_blocked():
+        random_number = random.randrange(0, 100)
+        if random_number < 90 and self.y > 0 and not index(self.x, self.y - 1).is_blocked():
             self.y -= 1
 
     def move_down(self):
-        if self.y < rows - 1 and not index(self.x, self.y + 1).is_blocked():
+        random_number = random.randrange(0, 100)
+        if random_number < 90 and self.y < rows - 1 and not index(self.x, self.y + 1).is_blocked():
             self.y += 1
 
     def move_left(self):
-        if self.x > 0 and not index(self.x - 1, self.y).is_blocked():
+        random_number = random.randrange(0, 100)
+        if random_number < 90 and self.x > 0 and not index(self.x - 1, self.y).is_blocked():
             self.x -= 1
 
     def move_right(self):
-        if self.x < columns - 1 and not index(self.x + 1, self.y).is_blocked():
+        random_number = random.randrange(0, 100)
+        if random_number < 90 and self.x < columns - 1 and not index(self.x + 1, self.y).is_blocked():
             self.x += 1
 
     def sniff(self):
