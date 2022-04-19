@@ -134,11 +134,11 @@ def populate_graph():
         print()
 
 
-def traverse_graph():
+def traverse_graph(timez):
     directions.clear()
     locations.clear()
     observations.clear()
-    for i in range(100):
+    for i in range(timez):
         random_number = random.randrange(0, 4)
         if random_number == 0:
             myAgent.move_up()
@@ -154,6 +154,18 @@ def traverse_graph():
             directions.append(RIGHT)
         locations.append(myAgent.get_local())
         observations.append(myAgent.sniff())
+
+
+def generate_start():
+    global init_cell
+    global myAgent
+    while True:
+        init_x = random.randrange(0, columns)
+        init_y = random.randrange(0, rows)
+        init_cell = (init_x, init_y)
+        myAgent = Agent(init_x, init_y)
+        if not index(init_x, init_y).is_blocked():
+            break
 
 
 def write_to_file(map, interation):
@@ -177,13 +189,9 @@ def index(x, y):
 
 
 if __name__ == '__main__':
-    global myAgent
     for i in range(10):
         populate_graph()
         for j in range(10):
-            init_x = random.randrange(0, columns)
-            init_y = random.randrange(0, rows)
-            init_cell = (init_x, init_y)
-            myAgent = Agent(init_x, init_y)
-            traverse_graph()
+            generate_start()
+            traverse_graph(100)
             write_to_file(i, j)
