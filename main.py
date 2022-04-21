@@ -98,7 +98,7 @@ def generate_random_state():
         return BLOCKED
 
 
-def populate_graph():
+def populate_graph(number):
     graph.clear()
     print("\n\n")
     total_cells = columns * rows
@@ -106,6 +106,7 @@ def populate_graph():
     highway = ceil(total_cells * 0.2)
     hard_to_traverse = ceil(total_cells * 0.2)
     blocked = total_cells - normal - highway - hard_to_traverse
+    f = open(f"ground_truth/map{number}.txt", "w")
     for ii in range(rows):
         for jj in range(columns):
             state = 'N'
@@ -132,10 +133,10 @@ def populate_graph():
                     if blocked > 0:
                         blocked -= 1
                         break
-            print(state, " ", end="")
+            f.write(f"{state} ")
             new_cell = Cell(jj, ii, state)
             graph.append(new_cell)
-        print()
+        f.write("\n")
 
 
 def traverse_graph(timez):
@@ -194,7 +195,7 @@ def index(x, y):
 
 if __name__ == '__main__':
     for i in range(10):
-        populate_graph()
+        populate_graph(i)
         for j in range(10):
             generate_start()
             traverse_graph(100)
