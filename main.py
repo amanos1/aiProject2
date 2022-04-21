@@ -76,6 +76,7 @@ class Agent:
     def sniff(self):
         random_number = random.randrange(0, 100)
         smell = index(self.x, self.y).get_state()
+        print(smell)
         if random_number < 90:
             return smell
         options = [NORMAL, HIGHWAY, HARD_TO_TRAVERSE]
@@ -143,7 +144,7 @@ def traverse_graph(timez):
     directions.clear()
     locations.clear()
     observations.clear()
-    for i in range(timez):
+    for k in range(timez):
         random_number = random.randrange(0, 4)
         if random_number == 0:
             myAgent.move_up()
@@ -173,18 +174,18 @@ def generate_start():
             break
 
 
-def write_to_file(map, interation):
-    f = open(f"ground_truth/map{map}test{interation}.txt", "w")
+def write_to_file(mapNum, interation):
+    f = open(f"ground_truth/map{mapNum}test{interation}.txt", "w")
 
     f.write(f"{init_cell[0]} {init_cell[1]}\n")
-    for i in locations:
-        f.write(f"{i[0]} {i[1]}\n")
+    for k in locations:
+        f.write(f"{k[0]} {k[1]}\n")
 
-    for i in directions:
-        f.write(f"{i}\n")
+    for k in directions:
+        f.write(f"{k}\n")
 
-    for i in observations:
-        f.write(f"{i}\n")
+    for k in observations:
+        f.write(f"{k}\n")
 
     f.close()
 
