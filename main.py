@@ -76,7 +76,7 @@ class Agent:
     def sniff(self):
         random_number = random.randrange(0, 100)
         smell = index(self.x, self.y).get_state()
-        print(smell)
+        # print(smell)
         if random_number < 90:
             return smell
         options = [NORMAL, HIGHWAY, HARD_TO_TRAVERSE]
@@ -101,7 +101,7 @@ def generate_random_state():
 
 def populate_graph(number):
     graph.clear()
-    print("\n\n")
+    # print("\n\n")
     total_cells = columns * rows
     normal = ceil(total_cells * 0.5)
     highway = ceil(total_cells * 0.2)
@@ -191,7 +191,7 @@ def write_to_file(mapNum, interation):
 
 
 def index(x, y):
-    return graph[(rows * y) + x]
+    return graph[(columns * y) + x]
 
 
 if __name__ == '__main__':
