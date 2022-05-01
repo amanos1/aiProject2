@@ -52,10 +52,10 @@ def printheat():
     if g == heatmap:
         for x in range(len(g)):
             if g[x]==t:
-                print('\033[1m'+'[{:.5f}%]'.format(g[x] * 100)+'\033[0m', end=" ")
-                #print("{:.3f}%".format(g[x] * 100), end=" ")
+                print('\033[1m'+'[{:.2f}]'.format(g[x] * 100)+'\033[0m', end=" ")
+                #print("{:.1f}%".format(g[x] * 100), end=" ")
             else:
-                print("{:.6f}%".format(g[x]*100),end=" ")
+                print("{:.2f}".format(g[x]*100),end=" ")
             if graph[x].x==columns-1:
                 print()
 def readmap(filename):
@@ -181,8 +181,8 @@ def findmax():
 def pcycle():
     for x in range(len(obs)):
         predict(dirs[x],obs[x])
-        #if x==9:
-            #printheat()
+        if x==9:
+            printheat()
         plocs.append(findmax())
         if plocs[x]==locs[x]:
             cloc[x]+=1
@@ -219,31 +219,10 @@ def printEandC():
         print(x + 1, end=" ")
         print(cloc[x],end=" ")
 if __name__ == '__main__':
-    readall()
-    finderror()
-    #printEandC()
-    #readmap("ground_truth/map0.txt")
-    #readgtruth("ground_truth/map0test0.txt")
-    #initheatmap()
-    #pcycle()
-
-    if False:
-        graph.append(Cell(0,0,HIGHWAY))
-        graph.append(Cell(1, 0, HIGHWAY))
-        graph.append(Cell(2, 0, HARD_TO_TRAVERSE))
-
-        graph.append(Cell(0, 1, NORMAL))
-        graph.append(Cell(1, 1, NORMAL))
-        graph.append(Cell(2, 1, NORMAL))
-
-        graph.append(Cell(0, 2, NORMAL))
-        graph.append(Cell(1, 2, BLOCKED))
-        graph.append(Cell(2, 2, HIGHWAY))
-        dirs.append(RIGHT)
-        dirs.append(RIGHT)
-        dirs.append(DOWN)
-        dirs.append(DOWN)
-        obs.append(NORMAL)
-        obs.append(NORMAL)
-        obs.append(HIGHWAY)
-        obs.append(HIGHWAY)
+    #readall()
+    #finderror()
+    printEandC()
+    readmap("ground_truth/map0.txt")
+    readgtruth("ground_truth/map0test0.txt")
+    initheatmap()
+    pcycle()
